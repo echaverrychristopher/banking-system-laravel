@@ -139,9 +139,12 @@ class TransactionController extends Controller
         });
     }
 
-    private function authorizeAccount(Request $request, Account $account)
+        private function authorizeAccount(Request $request, Account $account)
     {
-        if ($account->user_id !== $request->user()->id) {
+        $user = $request->user();
+
+        // El dueño puede operar su cuenta, o cajero/admin pueden operar cualquiera
+        if ($account->user_id !== $user->id && !in_array($user->role, ['cajero', 'admin'])) {
             abort(403, 'No autorizado');
         }
     }

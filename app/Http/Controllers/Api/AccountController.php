@@ -38,18 +38,19 @@ class AccountController extends Controller
         ], 201);
     }
 
-    // Ver el detalle de una cuenta específica (con sus transacciones)
-    public function show(Request $request, Account $account)
-    {
-        // Seguridad: verificar que la cuenta pertenece al usuario autenticado
-        if ($account->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'No autorizado'], 403);
-        }
+public function show(Request $request, Account $account)
+{
+    $user = $request->user();
 
-        $account->load('transactions');
-
-        return response()->json($account);
+    // El dueño de la cuenta puede verla, o cajero/admin pueden ver cualquiera
+    if ($account->user_id !== $user->id && !in_array($user->role, ['cajero', 'admin'])) {
+        return response()->json(['message' => 'No autorizado'], 403);
     }
+
+    $account->load('transactions', 'user:id,name,email');
+
+    return response()->json($account);
+}
 
     // Genera un número de cuenta único de 10 dígitos
     private function generateAccountNumber()
@@ -59,5 +60,13 @@ class AccountController extends Controller
         } while (Account::where('account_number', $number)->exists());
 
         return $number;
+    }
+
+        // Listar TODAS las cuentas del sistema (solo cajero y admin)
+    public function indexAll(Request $request)
+    {
+        $accounts = Account::with('user:id,name,email')->get();
+
+        return response()->json($accounts);
     }
 }
