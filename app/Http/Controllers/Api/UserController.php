@@ -14,18 +14,23 @@ class UserController extends Controller
         return response()->json(User::select('id', 'name', 'email', 'role', 'created_at')->get());
     }
 
-    // Cambiar el rol de un usuario (solo admin)
-    public function updateRole(Request $request, User $user)
-    {
-        $validated = $request->validate([
-            'role' => 'required|in:cliente,cajero,admin',
-        ]);
-
-        $user->update(['role' => $validated['role']]);
-
+  public function updateRole(Request $request, User $user)
+{
+    if ($user->id === $request->user()->id) {
         return response()->json([
-            'message' => 'Rol actualizado exitosamente',
-            'user' => $user,
-        ]);
+            'message' => 'No podés cambiar tu propio rol.',
+        ], 422);
     }
+
+    $validated = $request->validate([
+        'role' => 'required|in:cliente,cajero,admin',
+    ]);
+
+    $user->update(['role' => $validated['role']]);
+
+    return response()->json([
+        'message' => 'Rol actualizado exitosamente',
+        'user' => $user,
+    ]);
+}
 }

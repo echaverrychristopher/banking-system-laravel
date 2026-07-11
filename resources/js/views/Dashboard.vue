@@ -3,6 +3,9 @@
     <nav class="navbar">
       <h1>Banking System</h1>
       <div class="nav-right">
+        <router-link v-if="authStore.user?.role === 'admin'" to="/admin" class="link-btn">
+          Panel Admin
+        </router-link>
         <span>{{ authStore.user?.name }}</span>
         <button @click="handleLogout" class="logout-btn">Cerrar sesión</button>
       </div>
@@ -250,6 +253,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.link-btn {
+  color: #3b82f6;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
 .dashboard {
   min-height: 100vh;
   background: #0f172a;

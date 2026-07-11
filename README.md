@@ -19,6 +19,12 @@ El objetivo del proyecto es demostrar el manejo de conceptos críticos en sistem
 ### Historial de transacciones
 ![Transacciones](docs/screenshots/Transactions.png)
 
+### Panel de administración — Gestión de usuarios
+![Admin Usuarios](docs/screenshots/admin-users.png)
+
+### Panel de administración — Todas las cuentas
+![Admin Cuentas](docs/screenshots/admin-accounts.png)
+
 ## Funcionalidades
 
 - **Autenticación** basada en tokens con Laravel Sanctum (registro, login, logout)
@@ -30,7 +36,9 @@ El objetivo del proyecto es demostrar el manejo de conceptos críticos en sistem
 - **Auditoría de movimientos**: cada transacción registra el saldo resultante (`balance_after`) para trazabilidad completa
 - **Integridad transaccional**: las operaciones críticas usan transacciones de base de datos (`DB::transaction`), garantizando que una transferencia no pueda descontar dinero de una cuenta sin acreditarlo en la otra
 - **Control de acceso**: cada usuario solo puede ver y operar sobre sus propias cuentas
-- **Roles de usuario**: cliente, cajero y administrador (base para expansión de permisos)
+- **Control de acceso basado en roles (RBAC)**: cliente, cajero y administrador, con middleware de autorización en el backend
+- **Panel de administración**: gestión de usuarios y cambio de roles, con protección para que un administrador no pueda modificar su propio rol
+- **Cajero/Admin** pueden operar sobre cualquier cuenta del sistema (depósitos, retiros, transferencias), simulando atención en ventanilla
 - **Frontend reactivo** en Vue.js 3 con manejo de estado centralizado (Pinia) y rutas protegidas
 
 ## Stack tecnológico
